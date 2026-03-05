@@ -71,6 +71,7 @@ router.patch("/:id", async (req: Request, res: Response) => {
     const allowed = [
       "siteName", "tagline", "heroSubtitle", "accentColor",
       "partnerName", "partnerUrl", "partnerDescription", "twitterHandle", "domain",
+      "netlifyUrl", "netlifySiteId", "status",
     ];
     const updates: Record<string, unknown> = {};
     for (const key of allowed) {

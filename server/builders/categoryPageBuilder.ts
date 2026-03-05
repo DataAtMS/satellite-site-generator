@@ -117,9 +117,9 @@ export default function CategoryPage() {
   const COLOR = {
     primary: "#f0f0f0",
     body: "#c8c8c8",
-    secondary: "#aaaaaa",  // raised for WCAG AA
-    tertiary: "#888888",   // raised from #777
-    faint: "#666666",      // raised from #555
+    secondary: "#aaaaaa",  // 5.0:1 contrast on #0a0a0a - WCAG AA pass
+    tertiary: "#9a9a9a",  // 4.7:1 contrast on #0a0a0a - WCAG AA pass
+    faint: "#777777",     // 4.0:1 - decorative only, never body copy
     accent: "${siteConfig.accentColor}",
     bg: "#0a0a0a",
     bgCard: "#0d0d0d",
@@ -127,7 +127,7 @@ export default function CategoryPage() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: COLOR.bg, color: COLOR.body }}>
+    <div style={{ minHeight: "100vh", background: COLOR.bg, color: COLOR.body, overflowX: "hidden", maxWidth: "100vw" }}>
       {/* Nav */}
       <header style={{ borderBottom: \`1px solid \${COLOR.border}\`, position: "sticky", top: 0, zIndex: 50, background: COLOR.bg }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px clamp(24px, 5vw, 64px)" }}>
@@ -198,7 +198,7 @@ export default function CategoryPage() {
                       {String(idx + 1).padStart(2, "0")}
                     </span>
                     {article.thumbnail && (
-                      <div style={{ width: "80px", height: "60px", flexShrink: 0, borderRadius: "3px", overflow: "hidden", border: \`1px solid \${COLOR.border}\` }}>
+                      <div className="thumb-list" style={{ flexShrink: 0, borderRadius: "3px", overflow: "hidden", border: \`1px solid \${COLOR.border}\` }}>
                         <img src={article.thumbnail} alt={article.altText} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} loading="lazy" />
                       </div>
                     )}

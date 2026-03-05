@@ -13,8 +13,8 @@
   --border-focus: #333;
   --text-primary: #f0f0f0;
   --text-body: #c8c8c8;
-  --text-secondary: #999;
-  --text-tertiary: #666;
+  --text-secondary: #aaaaaa;  /* 5.0:1 contrast on #0a0a0a - WCAG AA */
+  --text-tertiary: #888888;  /* 4.5:1 contrast on #0a0a0a - WCAG AA */
   --accent: #ff0066;
   --accent-hover: #e0005a;
   --accent-muted: #cc4466;

@@ -124,9 +124,9 @@ export default function Step1Config({ initialConfig, onSubmit }: Props) {
     if (!config.siteName.trim()) errs.siteName = "Site name is required";
     if (!config.tagline.trim()) errs.tagline = "Tagline is required";
     if (!config.heroSubtitle.trim()) errs.heroSubtitle = "Hero subtitle is required";
-    if (!config.partnerName.trim()) errs.partnerName = "Partner name is required";
-    if (!config.partnerUrl.trim()) errs.partnerUrl = "Partner URL is required";
-    if (!config.partnerDescription.trim()) errs.partnerDescription = "Partner description is required";
+    if (!config.partnerName.trim()) errs.partnerName = "Moneysite name is required";
+    if (!config.partnerUrl.trim()) errs.partnerUrl = "Moneysite URL is required";
+    if (!config.partnerDescription.trim()) errs.partnerDescription = "Moneysite description is required";
     const validCats = config.categories.filter((c) => c.label.trim() && c.slug.trim());
     if (validCats.length < 2) errs.categories = "At least 2 categories are required";
     setErrors(errs);
@@ -215,7 +215,7 @@ export default function Step1Config({ initialConfig, onSubmit }: Props) {
             onChange={(e) => update("tagline", e.target.value)}
           />
           {errors.tagline && <p style={{ color: "var(--error)", fontSize: "12px", marginTop: "4px" }}>{errors.tagline}</p>}
-          <p className="form-hint">Short accent phrase shown below your site name in the H1. Do NOT include your site name here — just the tagline. Example: "See Every Session. Fix Every Drop-Off." (under 60 chars)</p>
+          <p className="form-hint">Short accent phrase shown below your site name in the H1. Do NOT include your site name here, just the tagline. Example: "See Every Session. Fix Every Drop-Off." (under 60 chars)</p>
         </div>
 
         <div style={{ marginBottom: "16px" }}>
@@ -302,7 +302,7 @@ export default function Step1Config({ initialConfig, onSubmit }: Props) {
         <p className="form-hint">Controls CTAs, logo color, category labels, and link highlights across the entire site.</p>
       </div>
 
-      {/* ── Section: Partner ── */}
+      {/* ── Section: Moneysite ── */}
       <div className="card" style={{ marginBottom: "24px" }}>
         <div
           style={{
@@ -316,12 +316,12 @@ export default function Step1Config({ initialConfig, onSubmit }: Props) {
             borderBottom: "1px solid var(--border)",
           }}
         >
-          // PARTNER LINK (AFFILIATE / SPONSOR)
+          // MONEYSITE FOR LINKS
         </div>
 
         <div className="grid-2" style={{ marginBottom: "16px" }}>
           <div>
-            <label className="form-label">Partner Name</label>
+            <label className="form-label">Moneysite Name</label>
             <input
               className="form-input"
               placeholder="FullStory"
@@ -331,7 +331,7 @@ export default function Step1Config({ initialConfig, onSubmit }: Props) {
             {errors.partnerName && <p style={{ color: "var(--error)", fontSize: "12px", marginTop: "4px" }}>{errors.partnerName}</p>}
           </div>
           <div>
-            <label className="form-label">Partner URL</label>
+            <label className="form-label">Moneysite URL</label>
             <input
               className="form-input"
               placeholder="https://www.fullstory.com"
@@ -343,7 +343,7 @@ export default function Step1Config({ initialConfig, onSubmit }: Props) {
         </div>
 
         <div>
-          <label className="form-label">Partner Description (1 sentence)</label>
+          <label className="form-label">Moneysite Description (1 sentence)</label>
           <input
             className="form-input"
             placeholder="FullStory is a great place to start if you're looking for a tool built specifically for session recording."
@@ -495,9 +495,9 @@ export default function Step1Config({ initialConfig, onSubmit }: Props) {
           </div>
           {/* Body text reminder */}
           <div style={{ fontFamily: "var(--mono)", fontSize: "10px", color: "var(--text-tertiary)", lineHeight: 1.6 }}>
-            Body text: <span style={{ color: "#c8c8c8" }}>#c8c8c8</span> on <span style={{ color: "var(--text-secondary)" }}>#0a0a0a</span> — contrast 11.5:1 ✓ &nbsp;|
-            Secondary: <span style={{ color: "#aaaaaa" }}>#aaaaaa</span> — contrast 8.1:1 ✓ &nbsp;|
-            Tertiary: <span style={{ color: "#888888" }}>#888888</span> — contrast 5.5:1 ✓
+            Body text: <span style={{ color: "#c8c8c8" }}>#c8c8c8</span> on <span style={{ color: "var(--text-secondary)" }}>#0a0a0a</span>, contrast 11.5:1 ✓ &nbsp;|
+            Secondary: <span style={{ color: "#aaaaaa" }}>#aaaaaa</span>, contrast 8.1:1 ✓ &nbsp;|
+            Tertiary: <span style={{ color: "#888888" }}>#888888</span>, contrast 5.5:1 ✓
           </div>
         </div>
       </div>

@@ -65,7 +65,7 @@ The first two sentences must be empathetic and relatable. The reader must feel l
 
 ## 6. Grammar Rules
 
-- **No em dashes.** Use a comma, period, or restructure the sentence instead.
+- **No em dashes. ABSOLUTE RULE.** The em dash character (—) is BANNED. Do not use it anywhere in any article. This includes: the Unicode em dash (—), HTML entity (&mdash;), or double hyphen used as an em dash ( -- ). Instead: use a comma, a period, a colon, a semicolon, or restructure the sentence entirely. If you catch yourself wanting to use an em dash, rewrite the sentence so it does not need one.
 - **No Oxford comma debates** — use it consistently.
 - **No passive voice.** "The data shows" not "It has been shown by the data."
 - **No hedging phrases.** "It's worth noting that" / "It's important to consider" — cut them. Say the thing directly.
@@ -119,11 +119,18 @@ Accordingly, Additionally, Arguably, Certainly, Consequently, Hence, However, In
 
 - Every article must link to at least 2 other articles on the same site.
 - Links must be placed where they are genuinely useful — not shoehorned in.
-- Anchor text must be descriptive and keyword-rich. Never "click here" or "this article."
-- Format: `[descriptive anchor text](/articles/{slug})`
+- Format: `[anchor text](/articles/{slug})` — relative URLs only, never absolute.
 - Category pages are also valid targets: `[anchor text](/{category-slug})`
 - Do not link to the same article more than once per article.
 - Internal links signal topical authority to search engines — treat them as part of the SEO strategy, not an afterthought.
+
+**Anchor text rules (CRITICAL — follow exactly):**
+- Anchor text MUST be 2–4 words. 3 words is ideal. Never more than 4 words.
+- Anchor text MUST include a partial or exact match of the TARGET article's keyword (the article being linked TO, not the current one).
+- Anchor text MUST vary across the article — do not repeat the same anchor text twice in the same article, and do not use the full article title as anchor text.
+- Never use generic anchor text: "click here", "read more", "this article", "learn more", "find out".
+- Good examples: `[scroll map data](/articles/scroll-maps)`, `[click tracking tools](/articles/click-maps)`, `[mobile heatmap setup](/articles/mobile-heatmaps)`
+- Bad examples: `[How to Use Scroll Maps to Understand User Behavior on Your Ecommerce Store](/articles/scroll-maps)` (too long), `[this article](/articles/scroll-maps)` (generic), `[click here](/articles/click-maps)` (generic)
 
 ---
 

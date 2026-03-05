@@ -38,7 +38,7 @@ export default function Step3Editor({ siteConfig, articles, onSubmit, onBack }: 
           // REVIEW & EDIT ARTICLES
         </h1>
         <p style={{ fontSize: "14px", color: "var(--text-secondary)", lineHeight: 1.6 }}>
-          Review each article Claude wrote. Click any article to read and edit the content, title, meta description, and excerpt before generating the site.
+          Review each article. Click any article to read and edit the content, title, meta description, and excerpt before generating the site.
         </p>
         <div style={{ display: "flex", gap: "16px", marginTop: "12px" }}>
           <span style={{ fontFamily: "var(--mono)", fontSize: "11px", color: "var(--success)" }}>

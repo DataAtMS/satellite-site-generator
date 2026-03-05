@@ -142,6 +142,9 @@ export async function generateSiteHandler(req: Request, res: Response) {
     sendLog(res, "Generating _redirects for SPA routing (Netlify)...");
     archive.append("/* /index.html 200\n", { name: "client/public/_redirects" });
 
+    sendLog(res, "Generating netlify.toml for build configuration...");
+    archive.append(`[build]\n  command = "npm install && npm run build"\n  publish = "dist"\n\n[build.environment]\n  NODE_VERSION = "20"\n`, { name: "netlify.toml" });
+
     sendLog(res, "Generating vercel.json for SPA routing (Vercel)...");
     archive.append(JSON.stringify({ rewrites: [{ source: "/(.*)", destination: "/index.html" }] }, null, 2) + "\n", { name: "vercel.json" });
 

@@ -42,6 +42,8 @@ export default function Step4Generate({
   const [deployMode, setDeployMode] = useState<"zip" | "live">("live");
   const [imageProgress, setImageProgress] = useState<Record<string, "pending" | "generating" | "done" | "error">>({});
   const [deployResult, setDeployResult] = useState<DeployResult | null>(null);
+  const [deployedArticles, setDeployedArticles] = useState<WrittenArticle[]>([]);
+  const [isDownloadingZip, setIsDownloadingZip] = useState(false);
 
   useEffect(() => {
     if (logRef.current) {
@@ -74,11 +76,11 @@ export default function Step4Generate({
     const res = await fetch("/api/generate-images", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ articles: payload }),
+      body: JSON.stringify({ articles: payload, accentColor: siteConfig.accentColor }),
     });
 
     if (!res.ok || !res.body) {
-      addLog("Image generation API unavailable — proceeding without thumbnails.", "warning");
+      addLog("Image generation API unavailable. Proceeding without thumbnails.", "warning");
       return articlesToProcess;
     }
 
@@ -86,6 +88,7 @@ export default function Step4Generate({
     const decoder = new TextDecoder();
     let buffer = "";
     const thumbnailMap: Record<string, string> = {};
+    let finalSuccessCount = 0;
 
     while (true) {
       const { done, value } = await reader.read();
@@ -111,12 +114,18 @@ export default function Step4Generate({
               addLog(event.message, "info");
             }
           } else if (event.type === "complete") {
+            finalSuccessCount = event.successCount ?? 0;
             addLog(`Images: ${event.successCount}/${doneArticles.length} generated successfully.`, event.successCount > 0 ? "success" : "warning");
           }
         } catch {
           // skip unparseable lines
         }
       }
+    }
+
+    // Block deploy if zero images succeeded — surface a clear error instead of silently deploying without thumbnails
+    if (finalSuccessCount === 0 && doneArticles.length > 0) {
+      throw new Error(`Image generation failed for all ${doneArticles.length} articles. Please retry or check the image API. You can also check "Skip image generation" to deploy without thumbnails.`);
     }
 
     return articlesToProcess.map((a) => ({
@@ -170,7 +179,7 @@ export default function Step4Generate({
           addLog(`Image generation failed: ${imgErr instanceof Error ? imgErr.message : "Unknown error"}. Continuing without images.`, "warning");
         }
       } else {
-        addLog("Image generation skipped — articles will use placeholder images.", "warning");
+        addLog("Image generation skipped. Articles will use placeholder images.", "warning");
       }
 
       if (deployMode === "live") {
@@ -251,11 +260,12 @@ export default function Step4Generate({
           commitSha,
           status: deployStatus === "ready" ? "ready" : "deploying",
         });
+        setDeployedArticles(articlesWithImages);
 
         if (deployStatus === "ready") {
           addLog(`Site is live at: ${netlifyUrl}`, "success");
         } else {
-          addLog(`Site linked at ${netlifyUrl} — Netlify may still be building (check in ~60s).`, "warning");
+          addLog(`Site linked at ${netlifyUrl}. Netlify may still be building (check in ~60s).`, "warning");
         }
 
         onComplete(netlifyUrl);
@@ -286,7 +296,7 @@ export default function Step4Generate({
             }
             const blob = new Blob([byteNums], { type: "application/zip" });
             const blobUrl = URL.createObjectURL(blob);
-            addLog(`ZIP ready — ${(blob.size / 1024).toFixed(0)} KB`, "success");
+            addLog(`ZIP ready: ${(blob.size / 1024).toFixed(0)} KB`, "success");
             addLog("Site generation complete!", "success");
             onComplete(blobUrl);
           } else if (event.type === "error") {
@@ -353,7 +363,7 @@ export default function Step4Generate({
                 <div style={{ fontSize: "12px", color: "var(--text-secondary)", lineHeight: 1.5 }}>
                   {mode === "live"
                     ? "Push to GitHub + deploy to Netlify automatically. Site is live in ~2 minutes. Editable later from My Sites."
-                    : "Download a ZIP file to self-host on any platform (Vercel, Netlify, Manus, etc)."}
+                    : "Download a ZIP file to self-host on any platform (Vercel, Netlify, etc)."}
                 </div>
                 {mode === "live" && (
                   <div style={{ marginTop: "8px", display: "flex", gap: "6px", flexWrap: "wrap" }}>
@@ -531,7 +541,7 @@ export default function Step4Generate({
       {deployResult && (
         <div className="card" style={{ marginBottom: "24px", border: `1px solid ${deployResult.status === "ready" ? "var(--success)" : "#f59e0b"}`, background: deployResult.status === "ready" ? "rgba(0,200,100,0.04)" : "rgba(245,158,11,0.04)" }}>
           <div style={{ fontFamily: "var(--mono)", fontSize: "12px", color: deployResult.status === "ready" ? "var(--success)" : "#f59e0b", letterSpacing: "0.06em", marginBottom: "16px" }}>
-            {deployResult.status === "ready" ? "✓ SITE IS LIVE" : "⚡ DEPLOYING — WILL BE LIVE SHORTLY"}
+            {deployResult.status === "ready" ? "✓ SITE IS LIVE" : "⚡ DEPLOYING - WILL BE LIVE SHORTLY"}
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "20px" }}>
             <div>
@@ -557,6 +567,47 @@ export default function Step4Generate({
             >
               VIEW LIVE SITE →
             </a>
+            <button
+              className="btn btn-secondary"
+              disabled={isDownloadingZip}
+              onClick={async () => {
+                setIsDownloadingZip(true);
+                addLog("Assembling site ZIP...", "info");
+                try {
+                  const res = await fetch("/api/generate-site", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ siteConfig, articles: deployedArticles }),
+                  });
+                  if (!res.ok || !res.body) throw new Error("ZIP generation failed");
+                  await streamNdjson(res, (event) => {
+                    if (event.type === "log") {
+                      addLog(event.message as string, (event.level as LogLine["type"]) || "info");
+                    } else if (event.type === "complete") {
+                      const dataUrl: string = event.downloadUrl as string;
+                      const base64 = dataUrl.split(",")[1];
+                      const byteChars = atob(base64);
+                      const byteNums = new Uint8Array(byteChars.length);
+                      for (let i = 0; i < byteChars.length; i++) byteNums[i] = byteChars.charCodeAt(i);
+                      const blob = new Blob([byteNums], { type: "application/zip" });
+                      const blobUrl = URL.createObjectURL(blob);
+                      const a = document.createElement("a");
+                      a.href = blobUrl;
+                      a.download = `${siteConfig.domain.replace(/[^a-z0-9]/gi, "-")}-site.zip`;
+                      a.click();
+                      addLog(`ZIP downloaded: ${(blob.size / 1024).toFixed(0)} KB`, "success");
+                    }
+                  });
+                } catch (e) {
+                  addLog(`ZIP error: ${e instanceof Error ? e.message : "Unknown error"}`, "error");
+                } finally {
+                  setIsDownloadingZip(false);
+                }
+              }}
+              style={{ fontSize: "11px" }}
+            >
+              {isDownloadingZip ? "BUILDING ZIP..." : "⬇ DOWNLOAD ZIP"}
+            </button>
             <a
               href="/sites"
               className="btn btn-secondary"
@@ -584,7 +635,7 @@ export default function Step4Generate({
                 <code style={{ fontFamily: "var(--mono)", background: "#111", padding: "1px 5px", borderRadius: "2px" }}>pnpm install</code>
                 {" "}then{" "}
                 <code style={{ fontFamily: "var(--mono)", background: "#111", padding: "1px 5px", borderRadius: "2px" }}>pnpm dev</code>
-                {" "}to preview locally, or deploy to Vercel/Netlify/Manus.
+                {" "}to preview locally, or deploy to Vercel/Netlify.
               </p>
             </div>
             <div style={{ display: "flex", gap: "10px" }}>

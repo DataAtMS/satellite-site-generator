@@ -165,9 +165,17 @@ export async function redeployToGithubHandler(req: Request, res: Response) {
       content,
     }));
 
+    // Get the base tree SHA from the parent commit so we build on top of existing files
+    const { data: parentCommit } = await octokit.rest.git.getCommit({
+      owner,
+      repo,
+      commit_sha: parentSha,
+    });
+
     const { data: tree } = await octokit.rest.git.createTree({
       owner,
       repo,
+      base_tree: parentCommit.tree.sha,
       tree: treeItems,
     });
 

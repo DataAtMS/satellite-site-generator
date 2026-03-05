@@ -180,7 +180,7 @@ export default function Step2Topics({
           // TOPICS & ARTICLE WRITING
         </h1>
         <p style={{ fontSize: "14px", color: "var(--text-secondary)", lineHeight: 1.6 }}>
-          Generate topic ideas, select the ones you want, then Claude writes all articles in parallel using your writing and SEO rules.
+          Generate topic ideas, select the ones you want, then all articles are written in parallel using your writing and SEO rules.
         </p>
       </div>
 
@@ -195,7 +195,7 @@ export default function Step2Topics({
               TOPICS PER CATEGORY:
             </label>
             <div style={{ display: "flex", gap: "8px" }}>
-              {[3, 5, 8, 10].map((n) => (
+              {[3, 5].map((n) => (
                 <button
                   key={n}
                   type="button"

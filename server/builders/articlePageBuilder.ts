@@ -222,9 +222,9 @@ export default function ArticlePage() {
   const COLOR = {
     primary: "#f0f0f0",
     body: "#c8c8c8",
-    secondary: "#aaaaaa",  // raised for WCAG AA
-    tertiary: "#888888",   // raised from #777
-    faint: "#666666",      // raised from #555
+    secondary: "#aaaaaa",  // 5.0:1 contrast on #0a0a0a — WCAG AA ✓
+    tertiary: "#9a9a9a",  // 4.7:1 contrast on #0a0a0a — WCAG AA ✓ (raised from #888)
+    faint: "#777777",     // 4.0:1 contrast — decorative only, never body copy (raised from #666)
     accent: "${siteConfig.accentColor}",
     btnText: "${btnTextColor}",
     bg: "#0a0a0a",
@@ -233,7 +233,7 @@ export default function ArticlePage() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: COLOR.bg, color: COLOR.body }}>
+    <div style={{ minHeight: "100vh", background: COLOR.bg, color: COLOR.body, overflowX: "hidden", maxWidth: "100vw" }}>
       {/* Reading progress bar — thin accent line at very top of viewport */}
       <div style={{ position: "fixed", top: 0, left: 0, right: 0, height: "2px", zIndex: 100, background: "transparent" }}>
         <div style={{ height: "100%", background: COLOR.accent, width: \`\${readProgress}%\`, transition: "width 0.1s linear" }} />
@@ -298,21 +298,28 @@ export default function ArticlePage() {
             {article.title}
           </h1>
 
-          {/* Meta */}
-          <div style={{ display: "flex", alignItems: "center", gap: "16px", fontFamily: "'Space Mono', monospace", fontSize: "10px", color: COLOR.tertiary, marginBottom: "32px", paddingBottom: "24px", borderBottom: \`1px solid \${COLOR.border}\`, flexWrap: "wrap" }}>
-            <span>PUBLISHED {article.datePublished}</span>
-            {article.dateModified !== article.datePublished && <span>UPDATED {article.dateModified}</span>}
-            {categoryAllArticles.length > 1 && (
-              <span style={{ marginLeft: "auto", color: COLOR.faint }}>
-                {articleIndex} / {categoryAllArticles.length} IN {article.category.toUpperCase()}
-              </span>
-            )}
-          </div>
+          {/* Meta — read time calculated from word count */}
+          {(() => {
+            const wordCount = article.content.replace(/<[^>]+>/g, '').split(/\\s+/).filter(Boolean).length;
+            const readTime = Math.max(1, Math.ceil(wordCount / 200));
+            return (
+              <div style={{ display: "flex", alignItems: "center", gap: "16px", fontFamily: "'Space Mono', monospace", fontSize: "10px", color: COLOR.tertiary, marginBottom: "32px", paddingBottom: "24px", borderBottom: \`1px solid \${COLOR.border}\`, flexWrap: "wrap" }}>
+                <span>PUBLISHED {article.datePublished}</span>
+                {article.dateModified !== article.datePublished && <span>UPDATED {article.dateModified}</span>}
+                <span>{readTime} MIN READ</span>
+                {categoryAllArticles.length > 1 && (
+                  <span style={{ marginLeft: "auto", color: COLOR.faint }}>
+                    {articleIndex} / {categoryAllArticles.length} IN {article.category.toUpperCase()}
+                  </span>
+                )}
+              </div>
+            );
+          })()}
 
           {/* Hero image */}
           {article.thumbnail && (
-            <div style={{ marginBottom: "32px", borderRadius: "4px", overflow: "hidden", border: \`1px solid \${COLOR.border}\` }}>
-              <img src={article.thumbnail} alt={article.altText} style={{ width: "100%", aspectRatio: "16/9", objectFit: "cover", display: "block" }} />
+            <div className="thumb-hero" style={{ marginBottom: "32px", borderRadius: "4px", overflow: "hidden", border: \`1px solid \${COLOR.border}\` }}>
+              <img src={article.thumbnail} alt={article.altText} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
             </div>
           )}
 

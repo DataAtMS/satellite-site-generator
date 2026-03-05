@@ -143,7 +143,7 @@ export default function SiteEditor() {
     };
 
     try {
-      const res = await fetch("/api/redeploy-to-github", {
+      const res = await fetch("/api/redeploy", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ siteId }),
@@ -172,7 +172,7 @@ export default function SiteEditor() {
             if (event.type === "log") {
               addLog(event.message, event.level || "info");
             } else if (event.type === "redeploy_complete") {
-              addLog("Redeploy complete — Netlify is building the updated site.", "success");
+              addLog("Redeploy complete. Netlify is building the updated site.", "success");
               setSite((prev) => prev ? { ...prev, status: "deploying", lastDeployedAt: new Date().toISOString() } : prev);
               // Refresh deploys
               fetch(`/api/sites/${siteId}`)

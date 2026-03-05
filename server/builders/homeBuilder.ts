@@ -102,10 +102,10 @@ export default function Home() {
 
   const COLOR = {
     primary: "#f0f0f0",
-    body: "#c8c8c8",     // #c8c8c8 on #0a0a0a = 10.5:1 contrast ✓
-    secondary: "#aaaaaa",  // raised from #999 to #aaa for WCAG AA compliance
-    tertiary: "#888888",   // raised from #777 to #888 for minimum readability
-    faint: "#666666",      // raised from #555 to #666
+    body: "#c8c8c8",     // 10.5:1 contrast on #0a0a0a - WCAG AAA pass
+    secondary: "#aaaaaa",  // 5.0:1 contrast on #0a0a0a - WCAG AA pass
+    tertiary: "#9a9a9a",  // 4.7:1 contrast on #0a0a0a - WCAG AA pass
+    faint: "#777777",     // 4.0:1 - decorative only, never body copy
     accent: "${siteConfig.accentColor}",
     btnText: "${btnTextColor}",  // WCAG-computed: dark on light accents, light on dark
     link: "${linkColor}",
@@ -115,7 +115,7 @@ export default function Home() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: COLOR.bg, color: COLOR.body }}>
+    <div style={{ minHeight: "100vh", background: COLOR.bg, color: COLOR.body, overflowX: "hidden", maxWidth: "100vw" }}>
       {/* ── Top nav bar ── */}
       <header
         style={{
@@ -376,7 +376,7 @@ export default function Home() {
               onMouseLeave={(e) => ((e.currentTarget as HTMLDivElement).style.background = COLOR.bgCard)}
             >
               {featured.thumbnail && (
-                <div style={{ width: "100%", height: "220px", overflow: "hidden" }}>
+                <div className="thumb-featured">
                   <img
                     src={featured.thumbnail}
                     alt={featured.altText}
@@ -467,7 +467,7 @@ export default function Home() {
                       {String(idx + 1).padStart(2, "0")}
                     </span>
                     {article.thumbnail && (
-                      <div style={{ width: "80px", height: "60px", flexShrink: 0, borderRadius: "3px", overflow: "hidden", border: \`1px solid \${COLOR.border}\` }}>
+                      <div className="thumb-list" style={{ flexShrink: 0, borderRadius: "3px", overflow: "hidden", border: \`1px solid \${COLOR.border}\` }}>
                         <img src={article.thumbnail} alt={article.altText} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} loading="lazy" />
                       </div>
                     )}

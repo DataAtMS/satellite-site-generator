@@ -1,5 +1,43 @@
 import { Link, useLocation } from "wouter";
 
+// Moneysite logo — inline SVG mark + wordmark
+function MoneysiteLogo() {
+  return (
+    <svg
+      width="140"
+      height="28"
+      viewBox="0 0 140 28"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-label="Moneysite"
+    >
+      {/* Mark: stylised M with dollar-sign notch */}
+      <rect x="0" y="4" width="20" height="20" rx="3" fill="#ff0066" />
+      {/* M shape */}
+      <polyline
+        points="4,20 4,8 10,16 16,8 16,20"
+        fill="none"
+        stroke="#fff"
+        strokeWidth="2.2"
+        strokeLinejoin="round"
+        strokeLinecap="round"
+      />
+      {/* Wordmark */}
+      <text
+        x="26"
+        y="19"
+        fontFamily="'Space Mono', monospace"
+        fontWeight="700"
+        fontSize="13"
+        letterSpacing="0.04em"
+        fill="#f0f0f0"
+      >
+        MONEYSITE
+      </text>
+    </svg>
+  );
+}
+
 export default function Header() {
   const [location] = useLocation();
 
@@ -39,52 +77,15 @@ export default function Header() {
       }}
     >
       <div className="container" style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-          <Link href="/">
-            <a style={{ textDecoration: "none" }}>
-              <span
-                style={{
-                  fontFamily: "var(--mono)",
-                  fontSize: "12px",
-                  fontWeight: 700,
-                  color: "var(--accent)",
-                  letterSpacing: "0.08em",
-                  cursor: "pointer",
-                }}
-              >
-                SATELLITE SITE GENERATOR
-              </span>
-            </a>
-          </Link>
-          <span
-            style={{
-              fontFamily: "var(--mono)",
-              fontSize: "9px",
-              color: "var(--text-tertiary)",
-              letterSpacing: "0.06em",
-              background: "#111",
-              border: "1px solid var(--border)",
-              padding: "2px 6px",
-              borderRadius: "2px",
-            }}
-          >
-            INTERNAL TOOL
-          </span>
-        </div>
+        <Link href="/">
+          <a style={{ textDecoration: "none", display: "flex", alignItems: "center" }}>
+            <MoneysiteLogo />
+          </a>
+        </Link>
 
         <nav style={{ display: "flex", alignItems: "center", gap: "24px" }}>
           {navLink("/", "GENERATOR")}
           {navLink("/sites", "MY SITES")}
-          <span
-            style={{
-              fontFamily: "var(--mono)",
-              fontSize: "10px",
-              color: "var(--text-tertiary)",
-              letterSpacing: "0.05em",
-            }}
-          >
-            POWERED BY CLAUDE
-          </span>
         </nav>
       </div>
     </header>

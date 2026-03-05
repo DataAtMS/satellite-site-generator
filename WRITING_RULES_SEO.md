@@ -31,10 +31,13 @@
 ## 3. URL / Slug Rules
 
 - Format: `kebab-case`, all lowercase, no special characters.
-- Article URLs: `/articles/{slug}` — e.g. `/articles/scroll-maps-fold-problem-mobile`
+- Article URLs: `/articles/{slug}` — e.g. `/articles/scroll-maps-fold-problem`
 - Category URLs: `/{category-slug}` — e.g. `/scroll-maps`
-- Slugs must include the primary keyword.
-- Maximum 5–6 words. No stop words (a, the, for, of, in) unless critical to meaning.
+- Slugs MUST include an exact or partial match of the primary keyword.
+- **Maximum 5 words. Preferred: 4 words.** No stop words (a, the, for, of, in, to, with, by, from) unless they are essential to meaning.
+- The slug is derived from the article title by the system — the AI does not set slugs. However, the AI should write titles that produce clean 4-5 word slugs when stop words are removed.
+- Good slug examples: `scroll-map-analysis`, `click-map-product-pages`, `mobile-heatmap-setup`, `ab-test-sample-size`
+- Bad slug examples: `how-to-use-scroll-maps-to-understand-user-behavior-on-your-ecommerce-store` (too long), `scroll-maps` (too short, not specific enough)
 - Never change a slug after publish — it breaks inbound links and loses PageRank.
 
 ---

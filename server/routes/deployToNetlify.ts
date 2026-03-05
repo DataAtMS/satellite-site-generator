@@ -113,7 +113,7 @@ export async function deployToNetlifyHandler(req: Request, res: Response) {
         provider: "github",
         repo: `${owner}/${repo}`,
         branch: "main",
-        cmd: "pnpm build",
+        cmd: "npm install && npm run build",
         dir: "dist",
         installation_id: null,
       },
